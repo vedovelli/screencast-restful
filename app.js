@@ -1,64 +1,44 @@
-var app = require('./app_config.js');
+var app = require('./app_config.js'),
+    userController = require('./controller/userController.js'),
+    validator = require('validator'),
 
-var userController = require('./controller/userController.js');
+function validate(attribute) {
+  return validator.trim(validator.escape(req.param(attribute)));
+}
 
-var validator = require('validator');
+function responseJSON(resp) {
+  res.json(resp);
+}
 
 app.get('/', function(req, res) {
-
 	res.end('Servidor ON!');
 });
 
 app.get('/users', function(req, res) {
-
-	userController.list(function(resp) {
-
-		res.json(resp);
-	});
+	userController.list(responseJSON(resp));
 });
 
 app.get('/users/:id', function(req, res) {
-
-	var id = validator.trim(validator.escape(req.param('id')));
-
-	userController.user(id, function(resp) {
-
-		res.json(resp);
-	});
+	var id = validate('id');
+	userController.user(id, responseJSON(resp));
 });
 
 app.post('/users', function(req, res) {
-
-	var fullname = validator.trim(validator.escape(req.param('fullname')));
-	var email = validator.trim(validator.escape(req.param('email')));
-	var password = validator.trim(validator.escape(req.param('password')));
-
-	userController.save(fullname, email, password, function(resp) {
-
-		res.json(resp);
-	});
+	var fullname = validate('fullname');
+	var email = validate('email');
+	var password = validate('password');
+	userController.save(fullname, email, password, responseJSON(resp));
 });
 
 app.put('/users', function(req, res) {
-
-	var id = validator.trim(validator.escape(req.param('id')));
-	var fullname = validator.trim(validator.escape(req.param('fullname')));
-	var email = validator.trim(validator.escape(req.param('email')));
-	var password = validator.trim(validator.escape(req.param('password')));
-
-	userController.update(id, fullname, email, password, function(resp) {
-
-		res.json(resp);
-	});
+	var id = validate('id');
+	var fullname = validate('fullname');
+	var email = validate('email');
+	var password = validate('password');
+	userController.update(id, fullname, email, password, responseJSON(resp));
 });
 
 app.delete('/users/:id', function(req, res) {
-
-	var id = validator.trim(validator.escape(req.param('id')));
-
-	userController.delete(id, function(resp) {
-
-		res.json(resp);
-	});
-
+	var id = validate('id');
+	userController.delete(id, responseJSON(resp));
 });
