@@ -1,6 +1,6 @@
 var app = require('./app_config.js'),
     userController = require('./controller/userController.js'),
-    validator = require('validator'),
+    validator = require('validator');
 
 function validate(attribute) {
   return validator.trim(validator.escape(req.param(attribute)));
